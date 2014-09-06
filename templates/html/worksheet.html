@@ -1,0 +1,467 @@
+<!doctype html>
+<html>
+<!--
+<head>
+    <!- - Bootstrap CSS - ->
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.css"/>
+    <!- - Include FontAwesome CSS if you want to use feedback icons provided by FontAwesome - ->
+    <link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" />
+    <!- - BootstrapValidator CSS - ->
+    <link rel="stylesheet" href="/vendor/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <!- - jQuery and Bootstrap JS - ->
+    <script type="text/javascript" src="/vendor/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!- - BootstrapValidator JS - ->
+    <script type="text/javascript" src="/vendor/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+</head>
+-->
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap/3.2.0/css/bootstrap.min.css"/>
+
+    <!-- Include FontAwesome CSS if you want to use feedback icons provided by FontAwesome -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/fontawesome/4.1.0/css/font-awesome.min.css" />
+
+    <!-- BootstrapValidator CSS -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css"/>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <!-- BootstrapValidator JS -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js"></script>
+
+    <style type="text/css">
+        p.desc { }
+        .form-horizontal .has-feedback .form-control-feedback {
+            top: 27px !important;
+            right: -5px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <div class="page-header">
+                    <h2>ARM Worksheet</h2>
+                    <p>Please fill out this form prior to every manure application event, particularly from October through February. If applying from October through February, you must send notice of this form to WCD. That allows WCD to verify that you have gone though the appropriate steps to ensure that you will not have a runoff event during a high risk time of year.</p>
+                </div>
+
+                <!- -
+                Change the "action" attribute to your back-end URL
+                To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+                - ->
+                <form id="arm_form" method="post" class="form-horizontal" action="#"
+                    data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                    data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                    data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+
+
+                    <div class="form-group">
+                        <!--<label class="col-lg-3 control-label">Dairy Farm Name</label>-->
+                        <label class="col-lg-8">Dairy Farm Name</label>
+                        <p class="col-lg-8 desc"></p>
+                        <div class="col-lg-5">
+                            <input type="text" class="form-control" name="dairy_farm_name"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="the farm name is required and cannot be empty"
+
+                                data-bv-stringlength="true"
+                                data-bv-stringlength-min="0"
+                                data-bv-stringlength-max="2000"
+                                data-bv-stringlength-message="the farm name must be more than 0 and less than 2000 characters long"
+
+                                data-bv-regexp="true"
+                                data-bv-regexp-regexp="^[a-zA-Z0-9 ]+$"
+                                data-bv-regexp-message="the farm name can only consist of alphabetical, number and space characters"
+                            />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">Apply Date</label>
+                        <p class="col-lg-8 desc">Date you want to apply: You must do this evalutaion no more than 24 hours prior to application.</p>
+                        <div class="col-lg-5">
+                            <input type="date" class="form-control" name="apply_date" placeholder="YYYY/MM/DD"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="the date is required"
+
+                                data-bv-date="true"
+                                data-bv-date-format="YYYY/MM/DD"
+                                data-bv-date-message="the date is not valid" />
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">Field Name or Unit</label>
+                        <p class="col-lg-8 desc">Do a seperature evaluation for each field or management unit.</p>
+                        <div class="col-lg-5">
+                            <input type="text" class="form-control" name="managment_unit" placeholder="Enter the field name/number you want to apply to"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="the field name is required and cannot be empty"
+
+                                data-bv-stringlength="true"
+                                data-bv-stringlength-min="0"
+                                data-bv-stringlength-max="2000"
+                                data-bv-stringlength-message="the field name must be more than 0 and less than 2000 characters long"
+
+                                data-bv-regexp="true"
+                                data-bv-regexp-regexp="^[a-zA-Z0-9 ]+$"
+                                data-bv-regexp-message="the field name can only consist of alphabetical, number and space characters"
+                            />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">24 hour Precipitation ( inches )</label>
+                        <p class="col-lg-8 desc">Link to <a href="http://www.whatcomcd.org/msa">MSA precipitation</a></p>
+                        <div class="col-lg-5">
+                            <input type="number" min="0", max="2000" class="form-control" name="precipitation_1" placeholder="Enter the 24 hour precipition amount in inches"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="the precipiation is required and cannot be empty"
+
+                                data-bv-regexp="true"
+                                data-bv-regexp-regexp="^[0-9]+$"
+                                data-bv-regexp-message="The precipitation can only consist of number characters"
+                            />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">72 hour Precipitation ( inches )</label>
+                        <p class="col-lg-8 desc">Link to <a href="http://www.whatcomcd.org/msa">MSA precipitation</a></p>
+                        <div class="col-lg-5">
+                            <input type="number" min="0", max="2000" class="form-control" name="precipitation_2" placeholder="Enter the 72 hour precipition amount in inches"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="the precipiation is required and cannot be empty"
+
+                                data-bv-regexp="true"
+                                data-bv-regexp-regexp="^[0-9]+$"
+                                data-bv-regexp-message="The precipitation can only consist of number characters"
+                            />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">Soil Type</label>
+                        <p class="col-lg-8 desc">Enter the general soil type you want to apply to. If you dont know your soil type, make your selection under "Don't know". Soil type can be found on your farm plan map.</p>
+                        <div class="col-lg-5">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="soil_type" value="sand"
+                                        data-bv-notempty="true"
+                                        data-bv-notempty-message="soil type is required" /> Sand
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="soil_type" value="silt" /> Silt
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="soil_type" value="clay" /> Clay
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="soil_type"  value="other" /> Don't know
+                                </label>
+                            </div>
+                        </div>
+                        <!--col-lg-5-->
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">Soil Moisture</label>
+                        <p class="col-lg-8 desc">Enter moisture value in %. Click on the link for guidance on how to determine soil moisture: http://www.whatcomcd.org/soil-moisture-determination</p>
+                        <div class="col-lg-5">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="soil_moisture" value="90"
+                                        data-bv-notempty="true"
+                                        data-bv-notempty-message="soil moisture is required" /> 90-100%
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="soil_moisture" value="80" /> 80-90%
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="soil_moisture" value="70" /> 70-80%
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="soil_moisture" value="60" /> 60-70%
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="soil_moisture"  value="50" /> &lt; 60%
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">Water Table Depth ( feet )</label>
+                        <div class="col-lg-5">
+                            <input type="number" min="2", max="20000" class="form-control" name="water_table_depth" placeholder="Enter value in feet"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="the water table depth is required and cannot be empty"
+
+                                data-bv-regexp="true"
+                                data-bv-regexp-regexp="^[0-9]+$"
+                                data-bv-regexp-message="The water table depth can only consist of number characters"
+                            />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">Forage Density ( % )</label>
+                        <p class="col-lg-8 desc">click link for guidance on how to determine forage density: http://www.whatcomcd.org/forage-density-determination</p>
+                        <div class="col-lg-5">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="forage_density" value="90"
+                                        data-bv-notempty="true"
+                                        data-bv-notempty-message="forage density is required" /> 90-100%
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="forage_density" value="80" /> 80-90%
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="forage_density" value="70" /> 70-80%
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="forage_density"  value="60" /> &lt; 70%
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">Forage Height ( inches )</label>
+                        <div class="col-lg-5">
+                            <input type="number" min="0", max="2000" class="form-control" name="forage_height" placeholder="Enter value in feet"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="the forage height is required and cannot be empty"
+
+                                data-bv-regexp="true"
+                                data-bv-regexp-regexp="^[0-9]+$"
+                                data-bv-regexp-message="The forage height can only consist of number characters"
+                            />
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">Field Surface Condition</label>
+                        <p class="col-lg-8 desc">check all that apply to your current field conditions</p>
+                        <div class="col-lg-5">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="surface_condition" value="ponding"
+                                        data-bv-notempty="true"
+                                        data-bv-notempty-message="field surface condition is required" /> Ponding
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="surface_condition" value="flodding" /> Flooding current or potential in 15 days
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="surface_condition" value="frozen" /> Frozen ( more than 1 inch ) or snow covered
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="surface_condition"  value="tiles" /> Tiles present in field
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="surface_condition"  value="none" /> None of the above
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">Manure Application Equipment</label>
+                        <p class="col-lg-8 desc">Check equipment/method of application</p>
+                        <div class="col-lg-5">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="application_equipment" value="below_application"
+                                        data-bv-notempty="true"
+                                        data-bv-notempty-message="application equipment is required" /> Below surface applicator (eg, injector, incorportaion within 24 hours)
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="application_equipment" value="surface_application" /> Surface application (eg, splash plate, tank)
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="application_equipment" value="surface_aerator" /> Surface aerator
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="application_equipment"  value="irrigation_sprinkler" /> Irrigation sprinkler (eg, Big Gun)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">Estimated Application Amount</label>
+                        <p class="col-lg-8 desc">Enter in gallons ( liquid ) or tons ( dry )</p>
+                        <div class="col-lg-5">
+                            <input type="text" class="form-control" name="application_amount"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="the application amount is required and cannot be empty"
+
+                                data-bv-regexp="true"
+                                data-bv-regexp-regexp="^[0-9]+$"
+                                data-bv-regexp-message="the application amount can only consist of number characters"
+                            />
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">Waterbody or Critical Area</label>
+                        <p class="col-lg-8 desc">Do you have a waterbody (i.e., ditch, stream, river, etc.) or identified critcal area (i.e., swale, wetland, etc) adjacent to your field?  Yes (answer next two questions) No (skip next question and click submit)</p>
+                        <div class="col-lg-5">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="critical_area" value="yes"
+                                        data-bv-notempty="true"
+                                        data-bv-notempty-message="critical area is required" /> Yes (answer next two questions)
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="critical_area" value="no" /> No (skip next question and click submit)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">If yes, enter in your current Manure Setback Distance</label>
+                        <p class="col-lg-8 desc">Setbacks are 10 feet from May through August. They increase to 40 in March and September, and 80 feet October through February. Find the current seasonal setback distance at: http://www.whatcomcd.org/manure-application-setback</p>
+                        <div class="col-lg-5">
+                            <input type="text" class="form-control" name="manure_setback_distance"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="manure setback distance is required and cannot be empty"
+
+                                data-bv-regexp="true"
+                                data-bv-regexp-regexp="^[0-9]+$"
+                                data-bv-regexp-message="manure setback distance can only consist of number characters"
+                            />
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-lg-8">If yes, do you have a dedicated vegitative buffer next to the water body? How wide? No ( submit form )</label>
+                        <p class="col-lg-8 desc"></p>
+                        <div class="col-lg-5">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="vegetation_buffer" value="no"
+                                        data-bv-notempty="true"
+                                        data-bv-notempty-message="vegetation buffer is required" /> No (submit form)
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="vegetation_buffer" data-distance="35" value="less_than" /> Yes, it is less than 35 feet
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="vegetation_buffer" data-distance="35" value="greater_than" /> Yes, it is greater than 35 feet
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-default">Submit</button>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script>
+
+    /*
+    **
+    **  GLOBALS
+    **
+    */
+    function has_input_date_support() {
+        var input = document.createElement('input');
+        input.setAttribute('type','date');
+
+        var notADateValue = 'not-a-date';
+        input.setAttribute('value', notADateValue); 
+
+        return !(input.value === notADateValue);
+    }
+
+    $(document).ready(function() {
+
+        // if browser doesn't support date input, create text input
+        if ( !has_input_date_support() ) {
+            $( 'input#apply_date' ).prop( 'type', 'text' );    
+        }
+
+
+        // setup validators
+        $('#arm_form').bootstrapValidator();
+
+    });
+
+
+</script>
+</body>
+</html>
