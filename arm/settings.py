@@ -186,6 +186,7 @@ INSTALLED_APPS = (
     'admins',
 
     'arm', # for management commands
+    #'arm.calc' ,
 )
 
 def override_settings( dottedpath ):

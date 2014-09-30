@@ -142,6 +142,7 @@ SITE_ID = 4
 
 SUPPORT_EMAIL='gregcorradini@gmail.com'
 
+'''
 sys.stdout.write(
     '[ APACHE INFO ] {0} {1} {2} {3}'.format(
         os.environ.get( 'ENVIRONMENT' ),
@@ -150,5 +151,6 @@ sys.stdout.write(
         os.environ.get( 'INOUTDBPASS' ),
     )
 )
+'''
 
 

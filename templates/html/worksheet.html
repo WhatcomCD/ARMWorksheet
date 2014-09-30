@@ -36,8 +36,49 @@
         p.desc { }
         .form-horizontal .has-feedback .form-control-feedback {
             top: 27px !important;
-            right: -5px !important;
+            right: -29px !important;
         }
+        
+        .riskrating {
+            padding-top: 15px;
+            font-weight: bold;
+        }
+        .cautionrating{
+            padding-top: 15px;
+        }
+
+        .show-hide-wrapper[data-state='opened'] {
+            display: block;
+        }
+
+        .show-hide-wrapper[data-state='closed'] {
+            display: none;
+        }
+        
+        .riskanalysis {
+            border: 1px black solid;
+            border-radius: 5px;
+            padding: 13px;
+        }
+
+    
+        .low {
+            color: lightblue;
+        }
+        .low-med  {
+            color: green;
+        }
+        .med  {
+            color: gold;
+        }
+        .med-high  {
+            color: orange;
+        }
+        .high  {
+            color: red;
+        }
+
+
     </style>
 </head>
 <body>
@@ -53,7 +94,7 @@
                 Change the "action" attribute to your back-end URL
                 To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
                 - ->
-                <form id="arm_form" method="post" class="form-horizontal" action="#"
+                <form id="arm_form" method="post" class="form-horizontal" action="/worksheet/"
                     data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
                     data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
                     data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
@@ -85,12 +126,12 @@
                         <label class="col-lg-8">Apply Date</label>
                         <p class="col-lg-8 desc">Date you want to apply: You must do this evalutaion no more than 24 hours prior to application.</p>
                         <div class="col-lg-5">
-                            <input type="date" class="form-control" name="apply_date" placeholder="YYYY/MM/DD"
+                            <input type="text" class="form-control" name="apply_date" placeholder="MM/DD/YYYY"
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="the date is required"
 
                                 data-bv-date="true"
-                                data-bv-date-format="YYYY/MM/DD"
+                                data-bv-date-format="MM/DD/YYYY"
                                 data-bv-date-message="the date is not valid" />
                         </div>
                     </div>
@@ -120,33 +161,45 @@
 
                     <div class="form-group">
                         <label class="col-lg-8">24 hour Precipitation ( inches )</label>
-                        <p class="col-lg-8 desc">Link to <a href="http://www.whatcomcd.org/msa">MSA precipitation</a></p>
+                        <p class="col-lg-8 desc">Link to <a target="_blank" href="http://www.whatcomcd.org/msa">MSA precipitation</a></p>
                         <div class="col-lg-5">
-                            <input type="number" min="0", max="2000" class="form-control" name="precipitation_1" placeholder="Enter the 24 hour precipition amount in inches"
+                            <input type="number" step="0.01" min="0", max="2000" class="form-control" name="precipitation_1" placeholder="Enter the 24 hour precipition amount in inches"
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="the precipiation is required and cannot be empty"
 
                                 data-bv-regexp="true"
-                                data-bv-regexp-regexp="^[0-9]+$"
+                                data-bv-regexp-regexp="^[0-9.]+$"
                                 data-bv-regexp-message="The precipitation can only consist of number characters"
+
+                                data-bv-lessthan-inclusive=false
+                                data-bv-lessthan-value=0.50
+                                data-bv-lessthan-message="Stop: The risk of runoff associated with more than 0.5 inches of rain after application is too high. Do not apply at this time."
                             />
                         </div>
+                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 cautionrating"></div>
                     </div>
 
 
                     <div class="form-group">
                         <label class="col-lg-8">72 hour Precipitation ( inches )</label>
-                        <p class="col-lg-8 desc">Link to <a href="http://www.whatcomcd.org/msa">MSA precipitation</a></p>
+                        <p class="col-lg-8 desc">Link to <a target="_blank" href="http://www.whatcomcd.org/msa">MSA precipitation</a></p>
                         <div class="col-lg-5">
-                            <input type="number" min="0", max="2000" class="form-control" name="precipitation_2" placeholder="Enter the 72 hour precipition amount in inches"
+                            <input type="number" step="0.01" min="0", max="2000" class="form-control" name="precipitation_2" placeholder="Enter the 72 hour precipition amount in inches"
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="the precipiation is required and cannot be empty"
 
                                 data-bv-regexp="true"
-                                data-bv-regexp-regexp="^[0-9]+$"
+                                data-bv-regexp-regexp="^[0-9.]+$"
                                 data-bv-regexp-message="The precipitation can only consist of number characters"
+
+                                data-bv-lessthan-inclusive=false
+                                data-bv-lessthan-value=0.50
+                                data-bv-lessthan-message="Stop: The risk of runoff associated with more than 0.5 inches of rain after application is too high. Do not apply at this time."
                             />
                         </div>
+                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 cautionrating"></div>
                     </div>
 
 
@@ -183,13 +236,16 @@
 
                     <div class="form-group">
                         <label class="col-lg-8">Soil Moisture</label>
-                        <p class="col-lg-8 desc">Enter moisture value in %. Click on the link for guidance on how to determine soil moisture: http://www.whatcomcd.org/soil-moisture-determination</p>
+                        <p class="col-lg-8 desc">Enter moisture value in %. Click on the link for guidance on how to determine soil moisture <a href="http://www.whatcomcd.org/soil-moisture-determination">here</a></p>
                         <div class="col-lg-5">
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="soil_moisture" value="90"
+                                    <input type="radio" name="soil_moisture" value="100"
                                         data-bv-notempty="true"
-                                        data-bv-notempty-message="soil moisture is required" /> 90-100%
+                                        data-bv-notempty-message="soil moisture is required" 
+
+                                    /> 90-100%
+
                                 </label>
                             </div>
                             <div class="radio">
@@ -213,27 +269,35 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 cautionrating"></div>
                     </div>
 
 
                     <div class="form-group">
                         <label class="col-lg-8">Water Table Depth ( feet )</label>
                         <div class="col-lg-5">
-                            <input type="number" min="2", max="20000" class="form-control" name="water_table_depth" placeholder="Enter value in feet"
+                            <input type="number" step="0.01" min="2", max="20000" class="form-control" name="water_table_depth" placeholder="Enter value in feet"
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="the water table depth is required and cannot be empty"
 
                                 data-bv-regexp="true"
-                                data-bv-regexp-regexp="^[0-9]+$"
+                                data-bv-regexp-regexp="^[0-9.]+$"
                                 data-bv-regexp-message="The water table depth can only consist of number characters"
+
+                                data-bv-greaterthan-inclusive=false
+                                data-bv-greaterthan-value=12
+                                data-bv-greaterthan-message="Stop: The water table is too close to the soil surface for safe application at this time. Wait until it recedes  before manure is applied."
                             />
                         </div>
+                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 cautionrating"></div>
                     </div>
 
 
                     <div class="form-group">
                         <label class="col-lg-8">Forage Density ( % )</label>
-                        <p class="col-lg-8 desc">click link for guidance on how to determine forage density: http://www.whatcomcd.org/forage-density-determination</p>
+                        <p class="col-lg-8 desc">click link for guidance on how to determine forage density <a href="http://www.whatcomcd.org/forage-density-determination">here</a></p>
                         <div class="col-lg-5">
                             <div class="radio">
                                 <label>
@@ -254,25 +318,38 @@
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="forage_density"  value="60" /> &lt; 70%
+                                    <input type="radio" name="forage_density"  value="65" /> 60-70%
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="forage_density"  value="50" /> &lt; 60%
                                 </label>
                             </div>
                         </div>
+                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 cautionrating"></div>
                     </div>
 
 
                     <div class="form-group">
                         <label class="col-lg-8">Forage Height ( inches )</label>
                         <div class="col-lg-5">
-                            <input type="number" min="0", max="2000" class="form-control" name="forage_height" placeholder="Enter value in feet"
+                            <input type="number" step="0.1" min="0", max="2000" class="form-control" name="forage_height" placeholder="Enter value in inches"
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="the forage height is required and cannot be empty"
 
                                 data-bv-regexp="true"
-                                data-bv-regexp-regexp="^[0-9]+$"
+                                data-bv-regexp-regexp="^[0-9.]+$"
                                 data-bv-regexp-message="The forage height can only consist of number characters"
+
+                                data-bv-greaterthan-inclusive=false
+                                data-bv-greaterthan-value=1
+                                data-bv-greaterthan-message="Stop: Cover height is not adequate to properly function: Instate a 100 manure setback distance from critical areas"
                             />
                         </div>
+                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 cautionrating"></div>
                     </div>
 
 
@@ -290,7 +367,7 @@
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="surface_condition" value="flodding" /> Flooding current or potential in 15 days
+                                    <input type="checkbox" name="surface_condition" value="flooding" /> Flooding current or potential in 15 days
                                 </label>
                             </div>
                             <div class="checkbox">
@@ -309,6 +386,8 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 cautionrating"></div>
                     </div>
 
 
@@ -340,12 +419,15 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 cautionrating"></div>
                     </div>
 
 
+                    <!--
                     <div class="form-group">
                         <label class="col-lg-8">Estimated Application Amount</label>
-                        <p class="col-lg-8 desc">Enter in gallons ( liquid ) or tons ( dry )</p>
+                        <p class="col-lg-8 desc">Enter in gallons ( liquid ) or tons ( dry ) per acre</p>
                         <div class="col-lg-5">
                             <input type="text" class="form-control" name="application_amount"
                                 data-bv-notempty="true"
@@ -357,12 +439,13 @@
                             />
                         </div>
                     </div>
+                    -->
 
 
 
                     <div class="form-group">
                         <label class="col-lg-8">Waterbody or Critical Area</label>
-                        <p class="col-lg-8 desc">Do you have a waterbody (i.e., ditch, stream, river, etc.) or identified critcal area (i.e., swale, wetland, etc) adjacent to your field?  Yes (answer next two questions) No (skip next question and click submit)</p>
+                        <p class="col-lg-8 desc">Do you have a waterbody (i.e., ditch, stream, river, etc.) or identified critcal area (i.e., swale, wetland, etc) adjacent to your field?</p>
                         <div class="col-lg-5">
                             <div class="radio">
                                 <label>
@@ -373,17 +456,20 @@
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="critical_area" value="no" /> No (skip next question and click submit)
+                                    <input type="radio" name="critical_area" value="no" /> No (click submit)
                                 </label>
                             </div>
                         </div>
+                        <div class="col-lg-8 desc riskrating">&nbsp;</div>
+                        <div class="col-lg-8 cautionrating"></div>
                     </div>
 
 
 
+                    <div class="show-hide-wrapper" data-state="closed">
                     <div class="form-group">
-                        <label class="col-lg-8">If yes, enter in your current Manure Setback Distance</label>
-                        <p class="col-lg-8 desc">Setbacks are 10 feet from May through August. They increase to 40 in March and September, and 80 feet October through February. Find the current seasonal setback distance at: http://www.whatcomcd.org/manure-application-setback</p>
+                        <label class="col-lg-8">Manure Setback Distance</label>
+                        <p class="col-lg-8 desc">Setbacks are 10 feet from May through August. They increase to 40 in March and September, and 80 feet October through February. Find the current seasonal setback distance <a target="_blank" href="http://www.whatcomcd.org/manure-application-setback">here</a></p>
                         <div class="col-lg-5">
                             <input type="text" class="form-control" name="manure_setback_distance"
                                 data-bv-notempty="true"
@@ -392,38 +478,55 @@
                                 data-bv-regexp="true"
                                 data-bv-regexp-regexp="^[0-9]+$"
                                 data-bv-regexp-message="manure setback distance can only consist of number characters"
+
                             />
                         </div>
+                        <div class="col-lg-8 desc riskrating">&nbsp;</div>
+                        <div class="col-lg-8 cautionrating"></div>
                     </div>
 
 
 
                     <div class="form-group">
-                        <label class="col-lg-8">If yes, do you have a dedicated vegitative buffer next to the water body? How wide? No ( submit form )</label>
+                        <label class="col-lg-8">Do you have a dedicated vegitative buffer next to the water body? How wide?</label>
                         <p class="col-lg-8 desc"></p>
                         <div class="col-lg-5">
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="vegetation_buffer" value="no"
+                                    <input type="radio" name="vegetation_buffer" value="100"
                                         data-bv-notempty="true"
-                                        data-bv-notempty-message="vegetation buffer is required" /> No (submit form)
+                                        data-bv-notempty-message="vegetation buffer is required" /> No
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="vegetation_buffer" data-distance="35" value="less_than" /> Yes, it is less than 35 feet
+                                    <input type="radio" name="vegetation_buffer" data-distance="10" value="0" /> Yes, it is less than 35 feet
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="vegetation_buffer" data-distance="35" value="greater_than" /> Yes, it is greater than 35 feet
+                                    <input type="radio" name="vegetation_buffer" data-distance="36" value="36" /> Yes, it is greater than 35 feet
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 cautionrating"></div>
+                    </div>
+                    </div><!--group-wrapper-->
+
+                    <div class="form-group riskanalysis">
+                        <label class="col-lg-8">Application Risk Analysis for Surface Runoff</label>
+                        <p class="col-lg-8 desc"></p>
+                        <div class="col-lg-5">
+                            <div class="readonly">
+                                <label>
+                                    <input readonly=readonly disabled=disabled type="text" name="total_risk" value=""/>
                                 </label>
                             </div>
                         </div>
                     </div>
-
-
                     <button type="submit" class="btn btn-default">Submit</button>
+
 
 
                 </form>
@@ -431,35 +534,26 @@
         </div>
     </div>
 
+<script type="text/javascript" src="/arm/js/validators.js"></script>
 <script>
 
     /*
     **
-    **  GLOBALS
+    **  ON READY
     **
     */
-    function has_input_date_support() {
-        var input = document.createElement('input');
-        input.setAttribute('type','date');
-
-        var notADateValue = 'not-a-date';
-        input.setAttribute('value', notADateValue); 
-
-        return !(input.value === notADateValue);
-    }
-
     $(document).ready(function() {
 
-        // if browser doesn't support date input, create text input
-        if ( !has_input_date_support() ) {
-            $( 'input#apply_date' ).prop( 'type', 'text' );    
-        }
+        var form_selector = '#arm_form';
+        $( form_selector )
+            .bootstrapValidator( window.CONFIG_VALIDATOR )
+            .on('error.form.bv', function(e) {
+                // $(e.target) --> The form instance
+                // $(e.target).data('bootstrapValidator')
+                console.log( "FORM ERROR" );
+            });
 
-
-        // setup validators
-        $('#arm_form').bootstrapValidator();
-
-    });
+    }); //  ready
 
 
 </script>
