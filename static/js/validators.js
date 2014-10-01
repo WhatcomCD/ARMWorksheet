@@ -334,7 +334,7 @@ window.CONFIG_VALIDATOR = {
         manure_setback_distance : {
             validators : {
                 manure_setback_distance : {
-                    stop_message : "Stop: manure setbacks must be at least 10 feet Apr 15-Aug 31 (40 feet for Big Gun); 40 feet from Sept 1-Apr 15 (80 feet for Big Gun )" ,
+                    stop_message : "Stop: manure setbacks must be a minimum of 10 feet from May 1 to August 31 (40 for Big Gun use). 40 feet from September 1 to May. and 80 feet from October 1 to February 28",
                 }
             } ,
         } ,
@@ -553,23 +553,38 @@ window.CONFIG_VALIDATOR = {
 
             var current_year = new Date().getFullYear();
             var january = new Date( '01/01/2014' ).setFullYear( current_year );
-            var april_15th = new Date( '04/15/2014' ).setFullYear( current_year );
+            var feb_28th = new Date( '02/28/2014' ).setFullYear( current_year );
+            var april_30th = new Date( '04/30/2014' ).setFullYear( current_year );
             var august_31st = new Date( '08/31/2014' ).setFullYear( current_year );
+            var sept_30th = new Date( '09/30/2014' ).setFullYear( current_year );
             var december = new Date( '12/31/2014' ).setFullYear( current_year );
         
 
             var error_flag = false;
-            if ( (( apply_date >= january && apply_date < april_15th ) || ( apply_date > august_31st && apply_date <= december )) ) {
-                if ( value < 40 ) {
+            if ( (( apply_date >= january && apply_date < feb_28th ) || ( apply_date > sept_30th && apply_date <= december )) ) {
+                if ( value < 80 ) {
                     error_flag = true; 
                 }
             }
 
-            if ( apply_date >= april_15th && apply_date <= august_31st ) {
+            if ( apply_date >= feb_28th && apply_date <= april_30th ) {
+                if ( value < 40 ) {
+                    error_flag = true;
+                }
+            }
+
+            if ( apply_date > april_30th && apply_date <= august_31st ) {
                 if ( value < 10 ) {
                     error_flag = true;
                 }
             }
+
+            if ( apply_date > august_31st && apply_date <= sept_30th ) {
+                if ( value < 40 ) {
+                    error_flag = true;
+                }
+            }
+
 
             if ( error_flag ) {
                 return {
