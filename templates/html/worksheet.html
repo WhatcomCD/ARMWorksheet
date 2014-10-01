@@ -275,9 +275,9 @@
 
 
                     <div class="form-group">
-                        <label class="col-lg-8">Water Table Depth ( feet )</label>
+                        <label class="col-lg-8">Water Table Depth ( inches )</label>
                         <div class="col-lg-5">
-                            <input type="number" step="0.01" min="2", max="20000" class="form-control" name="water_table_depth" placeholder="Enter value in feet"
+                            <input type="number" step="0.01" min="2", max="20000" class="form-control" name="water_table_depth" placeholder="Enter value in inches"
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="the water table depth is required and cannot be empty"
 
@@ -493,14 +493,14 @@
                         <div class="col-lg-5">
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="vegetation_buffer" value="100"
+                                    <input type="radio" name="vegetation_buffer" value="0"
                                         data-bv-notempty="true"
                                         data-bv-notempty-message="vegetation buffer is required" /> No
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="vegetation_buffer" data-distance="10" value="0" /> Yes, it is less than 35 feet
+                                    <input type="radio" name="vegetation_buffer" data-distance="10" value="34" /> Yes, it is less than 35 feet
                                 </label>
                             </div>
                             <div class="radio">
@@ -546,11 +546,16 @@
 
         var form_selector = '#arm_form';
         $( form_selector )
+            .on('init.form.bv', function(e) {
+                var now = new Date();
+                $( "input[name='apply_date']" ).val( now.getMonth() + "/" + now.getDate() + "/" + now.getFullYear() );
+            })
             .bootstrapValidator( window.CONFIG_VALIDATOR )
-            .on('error.form.bv', function(e) {
-                // $(e.target) --> The form instance
-                // $(e.target).data('bootstrapValidator')
-                console.log( "FORM ERROR" );
+            .on('error.field.bv', function(e) {
+                $( document ).trigger( 'rating-update', [ {}, true ] )
+            })
+            .on('success.field.bv', function(e) {
+                $( document ).trigger( 'rating-update', [ RATING ] )
             });
 
     }); //  ready

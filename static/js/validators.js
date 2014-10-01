@@ -63,22 +63,25 @@ window.update_riskrating_ui = function( $field, rating ) {
     // normalize back to original scores
     rating.risk = rating.risk + 1;
     RATING[ $field.attr('name') ] = rating.risk;
-    $( document ).trigger( 'rating-update', [ RATING ] );
 
 };
 
 
-window.update_caution_ui = function( $field, message ) {
+window.update_caution_ui = function( $field, message, append ) {
+    var is_append = append || false;
     var $caution = $field.parents( '.form-group' ).find( '.cautionrating' );
-    if ( message !== null ) {
+    if ( message !== null && !is_append ) {
         $caution.text( message );
+    }
+    else if ( message !== null && is_append ) {
+        $caution.append( $("</p>").text( message ) );
     }
     else {
         $caution.text( '' );
     }
 };
 
-$( document ).on( 'rating-update', function( e, rating ) {
+window.sum_total_ratings = function( rating ){
 
     var total = 0;
     for ( var key in rating ) {
@@ -87,29 +90,56 @@ $( document ).on( 'rating-update', function( e, rating ) {
             total += value;
         }
     }
+    return total;
 
-    var cutoff = null
-    if ( total < 29 ) {
-        cutoff = RISK_CUTOFF[ 29 ];
+};
+
+$( document ).on( 'rating-update', function( e, rating, override ) {
+
+    if ( typeof override === 'undefined' || override === null ) {
+
+        var total = sum_total_ratings( rating );
+
+        var cutoff = null;
+        var color_class = null;
+        if ( total < 29 ) {
+            cutoff = RISK_CUTOFF[ 29 ];
+            color_class = "low";
+        }
+        else if ( total >= 29 && total < 30 ) {
+            cutoff = RISK_CUTOFF[ 29 ];
+            color_class = "low";
+        }
+        else if ( total >= 30 && total < 45 ) {
+            cutoff = RISK_CUTOFF[ 30 ];
+            color_class = "low-med";
+        }
+        else if ( total >= 45 &&  total < 63 ) {
+            cutoff = RISK_CUTOFF[ 45 ];
+            color_class = "med";
+        }
+        else if ( total >= 63 && total < 78 ) {
+            cutoff = RISK_CUTOFF[ 63 ];
+            color_class = "med-high";
+        }
+        else if ( total >= 78 ) {
+            cutoff = RISK_CUTOFF[ 78 ];
+            color_class = "high";
+        }
+        remove_risk_rating_classes( $( "input[ name='total_risk' ]" ) );
+        $( "input[ name='total_risk' ]" ).addClass( color_class );
+        $( "input[ name='total_risk' ]" ).val( cutoff.display ); 
+        $( "input[ name='total_risk' ]" ).parents( '.form-group' ).find( '.desc' ).text( cutoff.message ); 
+
     }
-    else if ( total >= 29 && total < 30 ) {
-        cutoff = RISK_CUTOFF[ 29 ];
+    else  {
+
+        remove_risk_rating_classes( $( "input[ name='total_risk' ]" ) );
+        $( "input[ name='total_risk' ]" ).addClass( 'high' );
+        $( "input[ name='total_risk' ]" ).val( 'NO APPLICATION' ); 
+        $( "input[ name='total_risk' ]" ).parents( '.form-group' ).find( '.desc' ).text( "NO application, one or more indicators is above the critical value" ); 
+
     }
-    else if ( total >= 30 && total < 45 ) {
-        cutoff = RISK_CUTOFF[ 30 ];
-    }
-    else if ( total >= 45 &&  total < 63 ) {
-        cutoff = RISK_CUTOFF[ 45 ];
-    }
-    else if ( total >= 63 && total < 78 ) {
-        cutoff = RISK_CUTOFF[ 63 ];
-    }
-    else if ( total >= 78 ) {
-        cutoff = RISK_CUTOFF[ 78 ];
-        $( "button[ type='submit' ]" ).attr( 'disabled', 'disabled' ); 
-    }
-    $( "input[ name='total_risk' ]" ).val( cutoff.display ); 
-    $( "input[ name='total_risk' ]" ).parents( '.form-group' ).find( '.desc' ).text( cutoff.message ); 
 
 })
 
@@ -276,6 +306,10 @@ window.CONFIG_VALIDATOR = {
                 surface_risk_rating: {
                     comparitor : 'in' ,
                     stop_values : { 'flooding' : true, 'frozen' : true } ,
+                    caution_values : [
+                        { value : 'ponding', message : "Ponding - Caution: Avoid ponded areas with appropriate setback distance, particularly if they drain to waterways." } ,
+                        { value : 'tiles', message : "Tiles - Caution: Tiles must have at least 24 inches of cover, not be discharging manure, and their location must be known prior to application. Monitor tiles closely after application. If manure discharges from tile, plug immediately." } ,
+                    ] ,
                 }
             } ,
         } ,
@@ -310,13 +344,15 @@ window.CONFIG_VALIDATOR = {
         vegetation_buffer : {
             validators : {
                 restrict_radio : {
-                    comparitor : 'lessthan' ,
-                    stop_value : '34' ,
-                    stop_message : "Stop: buffers may not be adequate to filter runoff, refer to your Nutrient Management Plan for proper buffer width. Make sure to follow all manure setback distances." ,
+                    comparitor : 'equals' ,
+                    stop_value : '100' ,
+                    stop_message : 'Stop: a vegetation buffer is required',
                 } ,
                 risk_rating : {
                     values : [100, 80, 40, 35, 30, 25, 20, 22, 24, 10] ,
                     caution_values : [ 
+                        { value : 0, message : "Caution: buffers may not be adequate to filter runoff, refer to your Nutrient Management Plan for proper buffer width. Make sure to follow all manure setback distances."  } ,
+                        { value : 34, message : "Caution: buffers may not be adequate to filter runoff, refer to your Nutrient Management Plan for proper buffer width. Make sure to follow all manure setback distances."  } ,
                     ] ,
                     is_reversed : true 
                 } ,
@@ -481,16 +517,19 @@ window.CONFIG_VALIDATOR = {
                 update_riskrating_ui( $field, { risk: 3, display : 'Medium' } );
             }
 
-            
-            if ( checked_value === 'tiles' ) {
-                if ( $field.is( ':checked' ) ) {
-                    var caution = "Caution: Tiles must have at least 24 inches of cover, not be discharging manure, and their location must be known prior to application. Monitor tiles closely after application. If manure discharges from tile, plug immediately."
-                    update_caution_ui( $field, caution );
+
+            // cautions
+            update_caution_ui( $field, null );
+            for( var i = 0; i < values.length; i++ ) {
+                var value = values[ i ];
+                if ( value === 'ponding' ) {
+                    update_caution_ui( $field, options.caution_values[0].message, true );
                 }
-                else {
-                    update_caution_ui( $field, null );
+                else if ( value === 'tiles' ) {
+                    update_caution_ui( $field, options.caution_values[1].message, true );
                 }
             }
+
 
             return true;
         }
