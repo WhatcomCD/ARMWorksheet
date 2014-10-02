@@ -10,13 +10,15 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.views.generic.edit import FormView
+from django.core.mail import send_mail, BadHeaderError, EmailMessage
 
 
 #
 #  sys imports
 #
 import json
-from os import path
+import uuid
+import io
 import logging
 logger = logging.getLogger( __file__ )
 
@@ -57,6 +59,27 @@ class WorksheetView( FormView ):
         self.success_url = reverse( 'thankyou', )
 
     def form_valid( self, form ):
+        '''
+        email = EmailMessage('ARM worksheet submission', 'please see attachement', 'no_reply@whatcomcd-arm.com',
+                    ['gregcorradini@gmail.com'], ['bcc@example.com'],
+                    headers = {'Reply-To': 'another@example.com'})
+        '''
+        filename = 'submission-'+str(uuid.uuid4())+'.csv'
+        logger.debug( "[ WRITING FILE ]: %s" % filename )
+        with open( '/tmp/'+filename, 'w' ) as fsock:
+            fsock.write( json.dumps( self.request.POST, indent=4 ) )
+
+        try:
+            email = EmailMessage(
+                        'ARM worksheet submission', 
+                        'please see attachement', 
+                        'no_reply@whatcomcd-arm.com',
+                        ['gregcorradini@gmail.com'], [],
+                        headers = {})
+            email.attach_file('/tmp/'+filename)
+            email.send()
+        except Exception as e:
+            logger.exception( e );
         super( WorksheetView, self ).form_valid( form )
 
     def post( self, request, *args, **kwargs ):
