@@ -27,6 +27,8 @@ from os import path
 #handler404 = 'PracticeGround.mobile.views.Custom404Handler'
 #handler500 = 'PracticeGround.mobile.views.Custom500Handler'
 
+from arm.views.WorksheetView import WorksheetView
+
 def static(request, template_name):
 
     if 'employee_id' in request.session.keys():
@@ -52,9 +54,11 @@ urlpatterns = patterns('',
     url( r'^img/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': '%s/img' % path.join( settings.ABSOLUTE_PATH, 'static').replace('\\','/') } ),
     url( r'^js/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': '%s/js' % path.join( settings.ABSOLUTE_PATH, 'static').replace('\\','/') } ),
 
-    url( r'^$', TemplateView.as_view( template_name="worksheet.html" ) ),
-    url( r'/^$', TemplateView.as_view( template_name="worksheet.html" ) ),
-    url( r'^worksheet/$', TemplateView.as_view( template_name="worksheet.html" ) ),
+    url( r'/^$', WorksheetView.as_view(), name='worksheet'  ),
+    url( r'^$', WorksheetView.as_view(), name='worksheet'  ),
+    url( r'^thankyou/$', TemplateView.as_view( template_name="thankyou.html" ), name="thankyou" ),
+    #url( r'/^$', TemplateView.as_view( template_name="worksheet.html" ) ),
+    #url( r'^worksheet/$', TemplateView.as_view( template_name="worksheet.html" ) ),
     url( r'^admin/', include(admin.site.urls) ),
     #url( r'^employee/', include( 'inout_board.employees.urls', app_name='employees', namespace='employees' ) ),
     #url( r'^district/', include( 'inout_board.districts.urls', app_name='districts', namespace='districts' ) ),

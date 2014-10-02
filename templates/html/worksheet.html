@@ -94,10 +94,10 @@
                 Change the "action" attribute to your back-end URL
                 To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
                 - ->
-                <form id="arm_form" method="post" class="form-horizontal" action="/worksheet/"
+                <form id="arm_form" method="post" class="form-horizontal" action="/arm/"
                     data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
                     data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
-                    data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                    data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">{% csrf_token %}
 
 
                     <div class="form-group">
@@ -525,7 +525,9 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button id="send_btn" type="submit" class="btn btn-default">Send</button>
+                    <button id="clear_btn" class="btn btn-default">Clear</button>
+                    <button id="save_btn" class="btn btn-default">Save</button>
 
 
 
@@ -557,6 +559,32 @@
             .on('success.field.bv', function(e) {
                 $( document ).trigger( 'rating-update', [ RATING ] )
             });
+
+
+        $( '#clear_btn' ).on( 'click', function( e ) {
+            e.stopPropagation();
+            e.preventDefault();
+            $( form_selector ).data( 'bootstrapValidator' ).resetForm();
+            // clear risk and caution ratings
+            $( 'div.riskrating' ).text('');
+            $( 'div.cautionrating' ).text('');
+            // clear all radio and text inputs except the ones we want
+            $( "input[data-bv-notempty='true']" ).each( function( indx, elem ) {
+                var name = $( elem ).attr( 'name' );
+                if ( !( name in { 'apply_date' : true, 'precipitation_1' : true, 'precipitation_2' : true } ) ) {
+                    $( elem ).val( '' );
+                }
+            });
+            $( "input[type='radio']:checked" ).prop( "checked", false )
+        });
+
+
+        $( '#save_btn' ).on( 'click', function( e ) {
+            e.stopPropagation();
+            e.preventDefault();
+        });
+
+
 
     }); //  ready
 
