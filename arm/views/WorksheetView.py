@@ -80,7 +80,7 @@ class WorksheetView( FormView ):
             email.send()
         except Exception as e:
             logger.exception( e );
-        super( WorksheetView, self ).form_valid( form )
+        return super( WorksheetView, self ).form_valid( form )
 
     def post( self, request, *args, **kwargs ):
 
