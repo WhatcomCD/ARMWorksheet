@@ -39,6 +39,66 @@ class WorksheetForm( Form ):
         return cleaned_data
 
 
+def format_submission( sdict ):
+
+    '''
+    "forage_height": "98", 
+    "water_table_depth": "14", 
+    "soil_type": "sand", 
+    "application_equipment": "below_application", 
+    "soil_moisture": "80", 
+    "dairy_farm_name": "asdfdfd", 
+    "manure_setback_distance": "", 
+    "surface_condition": "ponding", 
+    "apply_date": "9/4/2014", 
+    "forage_density": "80", 
+    "critical_area": "no", 
+    "precipitation_2": "0.4", 
+    "precipitation_1": "0.3", 
+    "csrfmiddlewaretoken": "OF4PV3ypg0SUxHkhEgnp0621rUE3JltJ", 
+    "managment_unit": "asdfd67"
+    '''
+    record = {}
+    record[ 'headers' ] = [ 
+        'Farm_Name' ,
+        'Apply_Date' ,
+        'Field_Unit' ,
+        '24_Precip' ,
+        '72_Precip' ,
+        'Soil_Type' ,
+        'Soil_Mois' ,
+        'WaterT_Depth' ,
+        'Forage_Density' ,
+        'Forage_Height' ,
+        'Surface_Condition' ,
+        'App_Equipment' ,
+        'Critical_Area' ,
+        'Manure_Setback' ,
+        'Vegitative_Buffer' ,
+    ]
+
+    record[ 'row' ] = [
+        sdict.get( 'dairy_farm_name', '' ) ,
+        sdict.get( 'apply_date', '' ) , 
+        sdict.get( 'management_unit', '' ) ,
+        sdict.get( 'precipitation_1', '' ) ,
+        sdict.get( 'precipitation_2', '' ) ,
+        sdict.get( 'soil_type', '' ) ,
+        sdict.get( 'soil_moisture', '' ) ,
+        sdict.get( 'water_table_depth', '' ) ,
+        sdict.get( 'forage_density', '' ) ,
+        sdict.get( 'forage_height', '' ) ,
+        sdict.get( 'surface_condition', '' ) ,
+        sdict.get( 'application_equipment', '' ) ,
+        sdict.get( 'critical_area', '' ) ,
+        sdict.get( 'manure_setback_distance', '' ) ,
+        sdict.get( 'vegetation_buffer', '' ) ,
+    ]
+
+    return record
+
+
+
 class WorksheetView( FormView ):
 
     template_name = 'worksheet.html'
@@ -67,7 +127,9 @@ class WorksheetView( FormView ):
         filename = 'submission-'+str(uuid.uuid4())+'.csv'
         logger.debug( "[ WRITING FILE ]: %s" % filename )
         with open( '/tmp/'+filename, 'w' ) as fsock:
-            fsock.write( json.dumps( self.request.POST, indent=4 ) )
+            format = format_submission( self.request.POST )
+            fsock.write( ','.join( format[ 'headers' ] ) + "\n" )
+            fsock.write( ','.join( format[ 'row' ] ) + "\n" )
 
         try:
             email = EmailMessage(
