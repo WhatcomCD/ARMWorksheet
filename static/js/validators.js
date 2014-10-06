@@ -442,11 +442,11 @@ window.CONFIG_VALIDATOR = {
     $.fn.bootstrapValidator.validators.show_hide = {
         validate: function(validator, $field, options) {
             var value = $field.val();
-            if ( value === 'yes' ) {
-                $field.parents( 'form' ).find( '.show-hide-wrapper' ).attr( 'data-state', 'opened' );
+            if ( value === 'no' ) {
+                $field.parents( 'form' ).find( '.show-hide-wrapper' ).attr( 'data-state', 'closed' );
             }
             else {
-                $field.parents( 'form' ).find( '.show-hide-wrapper' ).attr( 'data-state', 'closed' );
+                $field.parents( 'form' ).find( '.show-hide-wrapper' ).attr( 'data-state', 'opened' );
             }
             return true;
         }

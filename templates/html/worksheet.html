@@ -450,9 +450,7 @@
                         <div class="col-lg-5">
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="critical_area" value="yes"
-                                        data-bv-notempty="true"
-                                        data-bv-notempty-message="critical area is required" /> Yes (answer next two questions)
+                                    <input type="radio" name="critical_area" value="" data-bv-notempty="true" data-bv-notempty-message="critical area is required" /> Yes (answer next two questions)
                                 </label>
                             </div>
                             <div class="radio">
@@ -547,28 +545,18 @@
     */
     $(document).ready(function() {
 
-        var form_selector = '#arm_form';
-        $( form_selector )
-            .on('init.form.bv', function(e) {
-                var now = new Date();
-                $( "input[name='apply_date']" ).val( now.getMonth() + "/" + now.getDate() + "/" + now.getFullYear() );
-            })
-            .bootstrapValidator( window.CONFIG_VALIDATOR )
-            .on('error.field.bv', function(e) {
-                $( document ).trigger( 'rating-update', [ {}, true ] )
-            })
-            .on('success.field.bv', function(e) {
-                $( document ).trigger( 'rating-update', [ RATING ] )
-            });
+        window.clear_stuff = function( e ) {
+            if ( typeof e !== 'undefined' ) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
 
-
-        $( '#clear_btn' ).on( 'click', function( e ) {
-            e.stopPropagation();
-            e.preventDefault();
             $( form_selector ).data( 'bootstrapValidator' ).resetForm();
+
             // clear risk and caution ratings
             $( 'div.riskrating' ).text('');
             $( 'div.cautionrating' ).text('');
+
             // clear all radio and text inputs except the ones we want
             $( "input[data-bv-notempty='true']" ).each( function( indx, elem ) {
                 var name = $( elem ).attr( 'name' );
@@ -576,9 +564,54 @@
                     $( elem ).val( '' );
                 }
             });
-            $( "input[type='radio']:checked" ).prop( "checked", false )
-        });
 
+            $( "input[type='radio']:checked" ).prop( "checked", false )
+        };
+
+        var form_selector = '#arm_form';
+        $( form_selector )
+            .on('init.form.bv', function(e) {
+                var now = new Date();
+                $( "input[name='apply_date']" ).val( now.getMonth() + "/" + now.getDate() + "/" + now.getFullYear() );
+            })
+            .bootstrapValidator( window.CONFIG_VALIDATOR )
+            .on('error.field.bv', function(e,data) {
+                // $(e.target)  --> The field element
+                // data.bv      --> The BootstrapValidator instance
+                // data.field   --> The field name
+                // data.element --> The field element
+                if  ( data.field === 'apply_date' ) {
+                    // revalidate manure setback
+                    if ( $( "input[name='manure_setback_distance']" ).val() !== "" ) {
+                        data.bv.revalidateField( 'manure_setback_distance' ); 
+                    }
+                }
+                $( document ).trigger( 'rating-update', [ {}, true ] )
+            })
+            .on('success.field.bv', function(e, data) {
+                // $(e.target)  --> The field element
+                // data.bv      --> The BootstrapValidator instance
+                // data.field   --> The field name
+                // data.element --> The field element
+                if  ( data.field === 'apply_date' ) {
+                    // revalidate manure setback
+                    if ( $( "input[name='manure_setback_distance']" ).val() !== "" ) {
+                        data.bv.revalidateField( 'manure_setback_distance' ); 
+                    }
+                }
+                $( document ).trigger( 'rating-update', [ RATING ] )
+            });
+
+
+        // clear any previous inputs
+        clear_stuff();
+
+        /*
+        **
+        **  event bindings
+        **
+        */
+        $( '#clear_btn' ).on( 'click', clear_stuff ); 
 
         $( '#save_btn' ).on( 'click', function( e ) {
             e.stopPropagation();
