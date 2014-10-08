@@ -40,24 +40,6 @@ class WorksheetForm( Form ):
 
 
 def format_submission( sdict ):
-
-    '''
-    "forage_height": "98", 
-    "water_table_depth": "14", 
-    "soil_type": "sand", 
-    "application_equipment": "below_application", 
-    "soil_moisture": "80", 
-    "dairy_farm_name": "asdfdfd", 
-    "manure_setback_distance": "", 
-    "surface_condition": "ponding", 
-    "apply_date": "9/4/2014", 
-    "forage_density": "80", 
-    "critical_area": "no", 
-    "precipitation_2": "0.4", 
-    "precipitation_1": "0.3", 
-    "csrfmiddlewaretoken": "OF4PV3ypg0SUxHkhEgnp0621rUE3JltJ", 
-    "managment_unit": "asdfd67"
-    '''
     record = {}
     record[ 'headers' ] = [ 
         'Farm_Name' ,
@@ -80,7 +62,7 @@ def format_submission( sdict ):
     record[ 'row' ] = [
         sdict.get( 'dairy_farm_name', '' ) ,
         sdict.get( 'apply_date', '' ) , 
-        sdict.get( 'management_unit', '' ) ,
+        sdict.get( 'managment_unit', '' ) ,
         sdict.get( 'precipitation_1', '' ) ,
         sdict.get( 'precipitation_2', '' ) ,
         sdict.get( 'soil_type', '' ) ,
@@ -136,7 +118,7 @@ class WorksheetView( FormView ):
                         'ARM worksheet submission', 
                         'please see attachement', 
                         'no_reply@whatcomcd-arm.com',
-                        ['gregcorradini@gmail.com'], [],
+                        ['NEmbertson@whatcomcd.org'], ['gregcorradini@gmail.com'],
                         headers = {})
             email.attach_file('/tmp/'+filename)
             email.send()
