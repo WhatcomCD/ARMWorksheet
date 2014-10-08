@@ -445,7 +445,7 @@ window.CONFIG_VALIDATOR = {
             if ( value === 'no' ) {
                 $field.parents( 'form' ).find( '.show-hide-wrapper' ).attr( 'data-state', 'closed' );
             }
-            else {
+            else if ( value === 'yes' ) {
                 $field.parents( 'form' ).find( '.show-hide-wrapper' ).attr( 'data-state', 'opened' );
             }
             return true;
