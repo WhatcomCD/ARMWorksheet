@@ -177,7 +177,7 @@
                                 data-bv-lessthan-message="Stop: The risk of runoff associated with more than 0.5 inches of rain after application is too high. Do not apply at this time."
                             />
                         </div>
-                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 desc riskrating" data-name="precipitation_1">Risk Rating: N/A</div>
                         <div class="col-lg-8 cautionrating"></div>
                     </div>
 
@@ -199,7 +199,7 @@
                                 data-bv-lessthan-message="Stop: The risk of runoff associated with more than 0.5 inches of rain after application is too high. Do not apply at this time."
                             />
                         </div>
-                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 desc riskrating" data-name="precipitation_2">Risk Rating: N/A</div>
                         <div class="col-lg-8 cautionrating"></div>
                     </div>
 
@@ -270,7 +270,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 desc riskrating" data-name="soil_moisture">Risk Rating: N/A</div>
                         <div class="col-lg-8 cautionrating"></div>
                     </div>
 
@@ -291,7 +291,7 @@
                                 data-bv-greaterthan-message="Stop: The water table is too close to the soil surface for safe application at this time. Wait until it recedes  before manure is applied."
                             />
                         </div>
-                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 desc riskrating" data-name="water_table_depth">Risk Rating: N/A</div>
                         <div class="col-lg-8 cautionrating"></div>
                     </div>
 
@@ -328,7 +328,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 desc riskrating" data-name="forage_density">Risk Rating: N/A</div>
                         <div class="col-lg-8 cautionrating"></div>
                     </div>
 
@@ -349,7 +349,7 @@
                                 data-bv-greaterthan-message="Stop: Cover height is not adequate to properly function: Instate a 100 manure setback distance from critical areas"
                             />
                         </div>
-                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 desc riskrating" data-name="forage_height">Risk Rating: N/A</div>
                         <div class="col-lg-8 cautionrating"></div>
                     </div>
 
@@ -387,7 +387,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 desc riskrating" data-name="surface_condition">Risk Rating: N/A</div>
                         <div class="col-lg-8 cautionrating"></div>
                     </div>
 
@@ -420,7 +420,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 desc riskrating" data-name="application_equipment">Risk Rating: N/A</div>
                         <div class="col-lg-8 cautionrating"></div>
                     </div>
 
@@ -459,7 +459,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-lg-8 desc riskrating">&nbsp;</div>
+                        <div class="col-lg-8 desc riskrating" data-name="critical_area">&nbsp;</div>
                         <div class="col-lg-8 cautionrating"></div>
                     </div>
 
@@ -480,7 +480,7 @@
 
                             />
                         </div>
-                        <div class="col-lg-8 desc riskrating">&nbsp;</div>
+                        <div class="col-lg-8 desc riskrating" data-name="manure_setback_distance">&nbsp;</div>
                         <div class="col-lg-8 cautionrating"></div>
                     </div>
 
@@ -508,7 +508,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-lg-8 desc riskrating">Risk Rating: N/A</div>
+                        <div class="col-lg-8 desc riskrating" data-name="vegetation_buffer">Risk Rating: N/A</div>
                         <div class="col-lg-8 cautionrating"></div>
                     </div>
                     </div><!--group-wrapper-->
@@ -519,7 +519,7 @@
                         <div class="col-lg-5">
                             <div class="readonly">
                                 <label>
-                                    <input readonly=readonly disabled=disabled type="text" name="total_risk" value=""/>
+                                    <input readonly=readonly type="text" name="total_risk" value=""/>
                                 </label>
                             </div>
                         </div>
@@ -577,6 +577,24 @@
                     }
                 }
                 $( document ).trigger( 'rating-update', [ RATING ] )
+            })
+            .on('success.form.bv', function(e) {
+
+                var $form = $(e.target);
+
+                // delete all hidden inputs
+                $( "input.hidden_risk" ).remove();
+                
+                // add all risk ratings as hidden inputs
+                $( '.riskrating' ).each( function( indx, elem ) {
+
+                    var data_name = $( elem ).attr( 'data-name' );
+                    var value = $( elem ).text();
+
+                    $form.append( '<input type="hidden" class="hidden_risk" name="'+data_name+'_risk" value="'+value+'"/>' );
+
+                });
+
             });
 
 
@@ -610,8 +628,6 @@
             e.stopPropagation();
             e.preventDefault();
         });
-
-
 
     }); //  ready
 
