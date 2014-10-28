@@ -16,6 +16,7 @@ from django.core.mail import send_mail, BadHeaderError, EmailMessage
 #
 #  sys imports
 #
+from datetime import datetime
 import json
 import uuid
 import io
@@ -42,6 +43,7 @@ class WorksheetForm( Form ):
 def format_submission( sdict ):
     record = {}
     record[ 'headers' ] = [ 
+        'Timestamp' ,
         'Farm_Name' ,
         'Apply_Date' ,
         'Field_Unit' ,
@@ -60,6 +62,7 @@ def format_submission( sdict ):
     ]
 
     record[ 'row' ] = [
+        datetime.now().strftime( '%m/%d/%y' ) ,
         sdict.get( 'dairy_farm_name', '' ) ,
         sdict.get( 'apply_date', '' ) , 
         sdict.get( 'managment_unit', '' ) ,
