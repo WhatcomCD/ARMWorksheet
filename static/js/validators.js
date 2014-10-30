@@ -173,7 +173,7 @@ window.calculate_risk_rating = function( value_to_check, values, options ) {
     values.forEach( function( value, indx ) {
         L.push( { 'value' : value, 'risk' : indx } );
     })
-    console.log( L );
+    //console.log( L );
     if( is_reversed ) { L.reverse(); }
 
     var left, right;
@@ -427,13 +427,13 @@ window.CONFIG_VALIDATOR = {
         validate: function(validator, $field, options) {
             var value = $field.val();
             var is_reversed = options.is_reversed || false;
-            console.log( value );
+            //console.log( value );
             var risk = calculate_risk_rating( value, options.values, { is_reversed : is_reversed } );
-            console.log( risk )
-            console.log( "[ RISK ]: ", risk );
+            //console.log( risk )
+            //console.log( "[ RISK ]: ", risk );
             update_riskrating_ui( $field, risk );
             var caution = calculate_caution( value, options.caution_values, { is_reversed : is_reversed } );
-            console.log( "[ CAUTION ]: ", caution );
+            //console.log( "[ CAUTION ]: ", caution );
             update_caution_ui( $field, caution );
 
             return true;
