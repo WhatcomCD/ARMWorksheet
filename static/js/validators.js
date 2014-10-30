@@ -173,6 +173,7 @@ window.calculate_risk_rating = function( value_to_check, values, options ) {
     values.forEach( function( value, indx ) {
         L.push( { 'value' : value, 'risk' : indx } );
     })
+    console.log( L );
     if( is_reversed ) { L.reverse(); }
 
     var left, right;
@@ -351,9 +352,9 @@ window.CONFIG_VALIDATOR = {
                     stop_message : 'Stop: a vegetation buffer is required',
                 } ,
                 risk_rating : {
-                    values : [100, 80, 40, 35, 30, 25, 20, 22, 24, 10] ,
+                    values : [100, 80, 40, 35, 30, 25, 24, 22, 20, 10] ,
                     caution_values : [ 
-                        { value : 0, message : "Caution: buffers may not be adequate to filter runoff, refer to your Nutrient Management Plan for proper buffer width. Make sure to follow all manure setback distances."  } ,
+                        { value : 22, message : "Caution: If you field is in grass, grass can act like a buffer if it is dense and greater than 3 inches in height. If your field is not in grass"  } ,
                         { value : 34, message : "Caution: buffers may not be adequate to filter runoff, refer to your Nutrient Management Plan for proper buffer width. Make sure to follow all manure setback distances."  } ,
                     ] ,
                     is_reversed : true 
@@ -426,12 +427,13 @@ window.CONFIG_VALIDATOR = {
         validate: function(validator, $field, options) {
             var value = $field.val();
             var is_reversed = options.is_reversed || false;
-
+            console.log( value );
             var risk = calculate_risk_rating( value, options.values, { is_reversed : is_reversed } );
-            //console.log( "[ RISK ]: ", risk );
+            console.log( risk )
+            console.log( "[ RISK ]: ", risk );
             update_riskrating_ui( $field, risk );
             var caution = calculate_caution( value, options.caution_values, { is_reversed : is_reversed } );
-            //console.log( "[ CAUTION ]: ", caution );
+            console.log( "[ CAUTION ]: ", caution );
             update_caution_ui( $field, caution );
 
             return true;
