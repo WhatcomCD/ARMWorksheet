@@ -301,13 +301,15 @@ window.CONFIG_VALIDATOR = {
                 restrict_radio : {
                     comparitor : 'in' ,
                     stop_values : { 'flooding' : true, 'frozen' : true } ,
-                    stop_message : "Stop: No Application permited" ,
+                    stop_message : "Stop: No Application permitted" ,
                 } ,
                 surface_risk_rating: {
                     comparitor : 'in' ,
                     stop_values : { 'flooding' : true, 'frozen' : true } ,
                     caution_values : [
                         { value : 'ponding', message : "Ponding - Caution: Avoid ponded areas with appropriate setback distance, particularly if they drain to waterways." } ,
+                        { value : 'flooding', message : "Flooding - No application is allowed if flooding is predicted in a 15 day window after application." } ,
+                        { value : 'frozen', message : "Frozen - No application is allowed on soils frozen one inch or greater below the surface, or covered in snow." } ,
                         { value : 'tiles', message : "Tiles - Caution: Tiles must have at least 24 inches of cover, not be discharging manure, and their location must be known prior to application. Monitor tiles closely after application. If manure discharges from tile, plug immediately." } ,
                     ] ,
                 }
@@ -525,8 +527,14 @@ window.CONFIG_VALIDATOR = {
                 if ( value === 'ponding' ) {
                     update_caution_ui( $field, options.caution_values[0].message, true );
                 }
-                else if ( value === 'tiles' ) {
+                else if ( value === 'flooding' ) {
                     update_caution_ui( $field, options.caution_values[1].message, true );
+                }
+                else if ( value === 'frozen' ) {
+                    update_caution_ui( $field, options.caution_values[2].message, true );
+                }
+                else if ( value === 'tiles' ) {
+                    update_caution_ui( $field, options.caution_values[3].message, true );
                 }
             }
 
