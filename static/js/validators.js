@@ -232,16 +232,16 @@ window.CONFIG_VALIDATOR = {
             validators : { 
                 restrict_radio : { 
                     comparitor : 'greaterthan' , 
-                    stop_value : 90 ,
+                    stop_value : 95 ,
                     stop_message :  "Stop: Do not apply at this time. The soil moisture is too high and the risk of runoff on this field is very high." ,
-                    caution_message : "Caution: You may be at risk for runoff. Check field conditions and the forecast, and apply only at or below recommended rates." ,
-                    caution_value : 80
                 } , 
                 risk_rating: { 
                     values : [55,60,65,70,75,80,85,90,95,100] ,
                     caution_values : [ 
                         { value : 80, message : "Caution: You may be at risk for runoff. Check field conditions and the forecast, and apply only at or below recommended rates." } ,
                         { value : 90, message : "Caution: You may be at risk for runoff. Check field conditions and the forecast, and apply only at or below recommended rates." } ,
+                        { value : 90, message : "Caution: your soil may reach saturation with manure application. Postpone application, or apply at a low rate to avoid saturation." } ,
+                        { value : 95, message : "Caution: your soil may reach saturation with manure application. Postpone application, or apply at a low rate to avoid saturation." } ,
                     ] ,
                 } , 
             } , 
