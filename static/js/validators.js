@@ -14,11 +14,11 @@ window.RISK_RATING = {
 
 window.RISK_CUTOFF = {
 
-    29 : { 'display' : 'LOW RISK', 'message' : "The risk associated with manure application is low. Follow all guidelines and recommendations in your Plan for proper application." } ,
-    30 : { 'display' : 'LOW-MED RISK', 'message' : "Apply manure following all guidelines and recommendations in your Plan." } ,
-    45 : { 'display' : 'MEDIUM RISK', 'message' : "Apply manure with caution. Follow all guidelines and recommendations in your Plan for proper application." } ,
-    63 : { 'display' : 'MEDIUM-HIGH RISK', 'message' : "If you apply manure, do so with EXTREME caution. Follow all recommendations, manure setback distances, and application guidelines in this worksheet and in your Plan." } ,
-    78 : { 'display' : 'HIGH RISK', 'message' : "Do NOT apply manure at this time, the risk is too high. Wait and reevaluate." } ,
+    24 : { 'display' : 'LOW RISK', 'message' : "The risk associated with manure application is low. Follow all guidelines and recommendations in your Plan for proper application." } ,
+    25 : { 'display' : 'LOW-MED RISK', 'message' : "Apply manure following all guidelines and recommendations in your Plan." } ,
+    31 : { 'display' : 'MEDIUM RISK', 'message' : "Apply manure with caution. Follow all guidelines and recommendations in your Plan for proper application." } ,
+    40 : { 'display' : 'MEDIUM-HIGH RISK', 'message' : "If you apply manure, do so with EXTREME caution. Follow all recommendations, manure setback distances, and application guidelines in this worksheet and in your Plan." } ,
+    50 : { 'display' : 'HIGH RISK', 'message' : "Do NOT apply manure at this time, the risk is too high. Wait and reevaluate." } ,
 
 }
 
@@ -102,28 +102,24 @@ $( document ).on( 'rating-update', function( e, rating, override ) {
 
         var cutoff = null;
         var color_class = null;
-        if ( total < 29 ) {
-            cutoff = RISK_CUTOFF[ 29 ];
+        if ( total <= 24 ) {
+            cutoff = RISK_CUTOFF[ 24 ];
             color_class = "low";
         }
-        else if ( total >= 29 && total < 30 ) {
-            cutoff = RISK_CUTOFF[ 29 ];
-            color_class = "low";
-        }
-        else if ( total >= 30 && total < 45 ) {
-            cutoff = RISK_CUTOFF[ 30 ];
+        else if ( total >= 25 && total < 31 ) {
+            cutoff = RISK_CUTOFF[ 25 ];
             color_class = "low-med";
         }
-        else if ( total >= 45 &&  total < 63 ) {
-            cutoff = RISK_CUTOFF[ 45 ];
+        else if ( total >= 31 && total < 40 ) {
+            cutoff = RISK_CUTOFF[ 31 ];
             color_class = "med";
         }
-        else if ( total >= 63 && total < 78 ) {
-            cutoff = RISK_CUTOFF[ 63 ];
+        else if ( total >= 40 &&  total < 50 ) {
+            cutoff = RISK_CUTOFF[ 40 ];
             color_class = "med-high";
         }
-        else if ( total >= 78 ) {
-            cutoff = RISK_CUTOFF[ 78 ];
+        else if ( total >= 50 ) {
+            cutoff = RISK_CUTOFF[ 50 ];
             color_class = "high";
         }
         remove_risk_rating_classes( $( "input[ name='total_risk' ]" ) );
