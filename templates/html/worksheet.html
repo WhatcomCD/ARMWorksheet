@@ -34,14 +34,14 @@
     <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js"></script>
 
     <style type="text/css">
-        /*
-        ================================
-        REMOVE ALL NUMBER INPUT SPINNERS
-        ================================
-        */
+
+        // remove all input spinners
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
+        }
+        input[type=number]{
+            -moz-appearance:textfield;
         }
 
 
