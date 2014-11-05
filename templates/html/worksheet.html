@@ -573,7 +573,7 @@
         $( form_selector )
             .on('init.form.bv', function(e) {
                 var now = new Date();
-                $( "input[name='apply_date']" ).val( now.getMonth() + "/" + now.getDate() + "/" + now.getFullYear() );
+                $( "input[name='apply_date']" ).val( now.getMonth()+1 + "/" + now.getDate() + "/" + now.getFullYear() );
             })
             .bootstrapValidator( window.CONFIG_VALIDATOR )
             .on('error.field.bv', function(e,data) {
