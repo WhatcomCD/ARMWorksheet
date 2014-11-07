@@ -175,18 +175,19 @@ window.calculate_risk_rating = function( value_to_check, values, options ) {
     var left, right;
     if ( value_to_check < L[0].value ) value_to_check = L[0].value; // normalize
     for ( left=0,right=1; right < L.length; left++,right++ ) {
-        //console.log( value_to_check, "  >>  ", L[left].value, L[right].value );
+        console.log( L[left].value, " <= ", value_to_check, " && ", value_to_check, " < ", L[right].value );
         if ( L[left].value <= value_to_check && value_to_check < L[right].value ) {
             // take lower threshold
-            return { risk : L[left].risk , display : RISK_RATING[ L[left].risk ] };
+            return { risk : L[right].risk , display : RISK_RATING[ L[left].risk ] };
         }
+        //console.log( value_to_check, " === ", L[right].value );
         else if ( value_to_check === L[right].value ) {
             return { risk : L[right].risk, display : RISK_RATING[ L[right].risk ] };
         }
     }
 
     if ( is_reversed ) {
-        return { risk: 0, display : RISK_RATING[ 0 ] };
+        return { risk: 1, display : RISK_RATING[ 0 ] };
     }
     else {
         return { risk : 9, display : RISK_RATING[ 9 ] };
@@ -424,9 +425,9 @@ window.CONFIG_VALIDATOR = {
             var value = $field.val();
             var is_reversed = options.is_reversed || false;
             //console.log( value );
-            var risk = calculate_risk_rating( value, options.values, { is_reversed : is_reversed } );
-            //console.log( risk )
-            //console.log( "[ RISK ]: ", risk );
+            var risk = calculate_risk_rating( parseFloat( value ), options.values, { is_reversed : is_reversed } );
+            console.log( risk )
+            console.log( "[ RISK ]: ", risk );
             update_riskrating_ui( $field, risk );
             var caution = calculate_caution( value, options.caution_values, { is_reversed : is_reversed } );
             //console.log( "[ CAUTION ]: ", caution );

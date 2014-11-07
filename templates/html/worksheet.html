@@ -58,6 +58,8 @@
         .cautionrating{
             padding-top: 15px;
             font-weight: bold;
+            font-size: 13.5px;
+            font-style: italic;
         }
 
         .show-hide-wrapper[data-state='opened'] {
@@ -651,6 +653,14 @@
         $( '#save_btn' ).on( 'click', function( e ) {
             e.stopPropagation();
             e.preventDefault();
+        });
+
+
+        $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
         });
 
     }); //  ready
