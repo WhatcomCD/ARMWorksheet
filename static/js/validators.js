@@ -1,14 +1,14 @@
 window.RISK_RATING = {
-    0 : 'Low' ,
-    1 : 'Low-Med' ,
+    1 : 'Low' ,
     2 : 'Low-Med' ,
-    3 : 'Medium' ,
+    3 : 'Low-Med' ,
     4 : 'Medium' ,
     5 : 'Medium' ,
-    6 : 'Med-High' ,
+    6 : 'Medium' ,
     7 : 'Med-High' ,
-    8 : 'High' ,
-    9 : 'Extreme' ,
+    8 : 'Med-High' ,
+    9 : 'High' ,
+    10: 'Extreme' ,
 }
 
 
@@ -60,8 +60,6 @@ window.update_riskrating_ui = function( $field, rating ) {
     $risk.text( "Risk Rating: "+rating.display );
     remove_risk_rating_classes( $risk );
     add_risk_rating_classes( $risk );
-    // normalize back to original scores
-    rating.risk = rating.risk + 1;
     RATING[ $field.attr('name') ] = rating.risk;
 
 };
@@ -99,6 +97,7 @@ $( document ).on( 'rating-update', function( e, rating, override ) {
     if ( typeof override === 'undefined' || override === null ) {
 
         var total = sum_total_ratings( rating );
+        console.log( "[ TOTAL RISK ]: ", total );
 
         var cutoff = null;
         var color_class = null;
@@ -167,9 +166,8 @@ window.calculate_risk_rating = function( value_to_check, values, options ) {
 
     var L = [];
     values.forEach( function( value, indx ) {
-        L.push( { 'value' : value, 'risk' : indx } );
+        L.push( { 'value' : value, 'risk' : indx+1 } );
     })
-    //console.log( L );
     if( is_reversed ) { L.reverse(); }
 
     var left, right;
@@ -177,20 +175,19 @@ window.calculate_risk_rating = function( value_to_check, values, options ) {
     for ( left=0,right=1; right < L.length; left++,right++ ) {
         console.log( L[left].value, " <= ", value_to_check, " && ", value_to_check, " < ", L[right].value );
         if ( L[left].value <= value_to_check && value_to_check < L[right].value ) {
-            // take lower threshold
-            return { risk : L[right].risk , display : RISK_RATING[ L[left].risk ] };
+            return { risk : L[left].risk , display : RISK_RATING[ L[left].risk ] };
         }
-        //console.log( value_to_check, " === ", L[right].value );
         else if ( value_to_check === L[right].value ) {
+            console.log( value_to_check, " === ", L[right].value );
             return { risk : L[right].risk, display : RISK_RATING[ L[right].risk ] };
         }
     }
 
     if ( is_reversed ) {
-        return { risk: 1, display : RISK_RATING[ 0 ] };
+        return { risk: 1, display : RISK_RATING[ 1 ] };
     }
     else {
-        return { risk : 9, display : RISK_RATING[ 9 ] };
+        return { risk : 10, display : RISK_RATING[ 10 ] };
     }
 };
 
@@ -426,7 +423,6 @@ window.CONFIG_VALIDATOR = {
             var is_reversed = options.is_reversed || false;
             //console.log( value );
             var risk = calculate_risk_rating( parseFloat( value ), options.values, { is_reversed : is_reversed } );
-            console.log( risk )
             console.log( "[ RISK ]: ", risk );
             update_riskrating_ui( $field, risk );
             var caution = calculate_caution( value, options.caution_values, { is_reversed : is_reversed } );
@@ -470,11 +466,17 @@ window.CONFIG_VALIDATOR = {
                 update_riskrating_ui( $field, { risk : 3, display : 'Medium' } );
                 var caution =  "Be cautious of turnaround areas and low spots. Watch for compaction on your field if applying to wet soils. Follow current manure setback distances.";
                 update_caution_ui( $field, caution );
+                var risk = { risk : 4, display : RISK_RATING[ 4 ] };
+                console.log( "[ RISK ]: ", risk );
+                update_riskrating_ui( $field, risk );
             }
             else if ( value === 'surface_aerator' ) {
                 update_riskrating_ui( $field, { risk : 3, display : 'Medium' } );
                 var caution = "This is a good method when applying to grass in a higher risk time. Watch for compaction on your field if applying to wet soils. Follow current manure setback distances.";
                 update_caution_ui( $field, caution );
+                var risk = { risk : 4, display : RISK_RATING[ 4 ] }
+                console.log( "[ RISK ]: ", risk );
+                update_riskrating_ui( $field, risk );
             }
             else if ( value === 'irrigation_sprinkler' ) {
                 update_riskrating_ui( $field, { risk : 4, display : 'Medium' } );
