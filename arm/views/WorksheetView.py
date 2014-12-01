@@ -124,11 +124,7 @@ class WorksheetView( FormView ):
         self.success_url = reverse( 'thankyou', )
 
     def form_valid( self, form ):
-        '''
-        email = EmailMessage('ARM worksheet submission', 'please see attachement', 'no_reply@whatcomcd-arm.com',
-                    ['gregcorradini@gmail.com'], ['bcc@example.com'],
-                    headers = {'Reply-To': 'another@example.com'})
-        '''
+
         filename = 'submission-'+str(uuid.uuid4())+'.csv'
         logger.debug( "[ WRITING FILE ]: %s" % filename )
         with open( '/tmp/'+filename, 'w' ) as fsock:

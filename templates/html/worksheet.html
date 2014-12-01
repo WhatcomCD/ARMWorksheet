@@ -564,6 +564,13 @@
 <script type="text/javascript" src="/arm/js/validators.js"></script>
 <script>
 
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
     /*
     **
     **  ON READY
@@ -574,8 +581,21 @@
         var form_selector = '#arm_form';
         $( form_selector )
             .on('init.form.bv', function(e) {
+
+                // auto populate apply date and call validator
                 var now = new Date();
                 $( "input[name='apply_date']" ).val( now.getMonth()+1 + "/" + now.getDate() + "/" + now.getFullYear() );
+                $( "input[name='apply_date']" ).change();
+
+                // handle  24 and 72 hour params if exist
+                var oneday_predict = getParameterByName( '24' );
+                var threeday_predict = getParameterByName( '72' );
+                if ( oneday_predict && threeday_predict ) {
+                    $( "input[name='precipitation_1']" ).val( Number( oneday_predict ) );
+                    $( "input[name='precipitation_1']" ).change();
+                    $( "input[name='precipitation_2']" ).val( Number( threeday_predict ) );
+                    $( "input[name='precipitation_2']" ).change();
+                }
             })
             .bootstrapValidator( window.CONFIG_VALIDATOR )
             .on('error.field.bv', function(e,data) {
