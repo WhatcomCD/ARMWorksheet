@@ -136,7 +136,7 @@ class WorksheetView( FormView ):
             email = EmailMessage(
                         'ARM worksheet submission', 
                         'please see attachement', 
-                        'no_reply@whatcomcd-arm.com',
+                        'no_reply@whatcomcd.org',
                         ['NEmbertson@whatcomcd.org'], ['gregcorradini@gmail.com'],
                         headers = {})
             email.attach_file('/tmp/'+filename)
